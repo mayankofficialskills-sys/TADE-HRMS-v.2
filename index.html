@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HRMS - TADE Techno Solution Private Limited</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-container">
+            <div class="login-header">
+                <div class="company-logo">
+                    <h1>TADE Techno Solution</h1>
+                    <span>Private Limited</span>
+                </div>
+                <h2>Human Resource Management System</h2>
+                <p>Please sign in to continue</p>
+            </div>
+            
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" id="loginUsername" name="username" placeholder="Enter your username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" id="loginPassword" name="password" placeholder="Enter your password" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rememberMe" name="rememberMe">
+                        <span class="checkmark"></span>
+                        Remember me
+                    </label>
+                </div>
+                
+                <div class="login-error hidden" id="loginError">
+                    Invalid username or password. Please try again.
+                </div>
+                
+                <button type="submit" class="btn btn--primary btn--full-width" id="loginButton">
+                    <span class="login-btn-text">Sign In</span>
+                    <span class="login-spinner hidden"></span>
+                </button>
+                
+                <div class="login-footer">
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+            </form>
+            
+            <div class="login-demo">
+                <p class="demo-title">Demo Accounts:</p>
+                <div class="demo-accounts">
+                    <div class="demo-account">
+                        <strong>Admin:</strong> admin / admin123
+                    </div>
+                    <div class="demo-account">
+                        <strong>HR Manager:</strong> hrmanager / hr123
+                    </div>
+                    <div class="demo-account">
+                        <strong>Employee:</strong> employee1 / emp123
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div class="main-app hidden" id="mainApp">
+        <!-- Header -->
+        <header class="header">
+            <div class="header__container">
+                <div class="header__brand">
+                    <h1>TADE Techno Solution Pvt. Ltd.</h1>
+                    <span class="header__subtitle">Human Resource Management System</span>
+                </div>
+                <div class="header__user">
+                    <div class="user-info">
+                        <span class="user-role" id="currentUserRole">HR Manager</span>
+                        <span class="user-name" id="currentUserName">Admin User</span>
+                    </div>
+                    <button class="btn btn--outline btn--sm" id="logoutButton" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="nav__container">
+                <div class="nav__tabs" id="navTabs">
+                    <button class="nav__tab nav__tab--active" data-module="dashboard">
+                        <span>Dashboard/Reports</span>
+                    </button>
+                    <button class="nav__tab" data-module="workorder">
+                        <span>Work Order/PO Entry</span>
+                    </button>
+                    <button class="nav__tab" data-module="manpower">
+                        <span>Manpower Details</span>
+                    </button>
+                    <button class="nav__tab" data-module="onboarding">
+                        <span>Employee Onboarding</span>
+                    </button>
+                    <button class="nav__tab" data-module="hr-management">
+                        <span>HR Management</span>
+                    </button>
+                    <button class="nav__tab" data-module="grievances">
+                        <span>Employee Grievances</span>
+                    </button>
+                    <button class="nav__tab" data-module="refer-program">
+                        <span>Refer Program</span>
+                    </button>
+                    <button class="nav__tab" data-module="rbac" id="rbacTab" style="display: none;">
+                        <span>Role Management</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main" id="mainContent">
+            
+            <!-- Dashboard Module -->
+            <div class="module" id="dashboard-module">
+                <div class="module__header">
+                    <h2>Dashboard & Reports</h2>
+                    <div class="module__actions">
+                        <button class="btn btn--primary" onclick="generateReport()">Generate Report</button>
+                        <button class="btn btn--secondary" onclick="exportData()">Export Data</button>
+                    </div>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="card dashboard-card">
+                        <div class="card__body">
+                            <h3>Active Work Orders</h3>
+                            <div class="metric-value" id="activeWorkOrders">2</div>
+                            <div class="metric-label">Currently Active</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card dashboard-card">
+                        <div class="card__body">
+                            <h3>Total Employees</h3>
+                            <div class="metric-value" id="totalEmployees">2</div>
+                            <div class="metric-label">Active Employees</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card dashboard-card">
+                        <div class="card__body">
+                            <h3>Job Openings</h3>
+                            <div class="metric-value" id="totalJobOpenings">5</div>
+                            <div class="metric-label">Available Positions</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card dashboard-card">
+                        <div class="card__body">
+                            <h3>Open Grievances</h3>
+                            <div class="metric-value" id="openGrievances">1</div>
+                            <div class="metric-label">Needs Resolution</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reports-section">
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>Quick Reports</h3>
+                            <div class="reports-grid">
+                                <button class="btn btn--outline" onclick="viewReport('employee-master')">Employee Master</button>
+                                <button class="btn btn--outline" onclick="viewReport('salary-master')">Salary Master</button>
+                                <button class="btn btn--outline" onclick="viewReport('workorder-mis')">Work Order MIS</button>
+                                <button class="btn btn--outline" onclick="viewReport('attendance-report')">Attendance Report</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Work Order Module -->
+            <div class="module hidden" id="workorder-module">
+                <div class="module__header">
+                    <h2>Work Order / PO Entry</h2>
+                    <div class="module__actions">
+                        <button class="btn btn--primary" onclick="openWorkOrderForm()">New Work Order</button>
+                    </div>
+                </div>
+                
+                <div class="data-table">
+                    <table class="table" id="workOrderTable">
+                        <thead>
+                            <tr>
+                                <th>Work Order ID</th>
+                                <th>Client Name</th>
+                                <th>Location</th>
+                                <th>Work Order Type</th>
+                                <th>Job Openings</th>
+                                <th>Assigned/Total</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="workOrderTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Manpower Module -->
+            <div class="module hidden" id="manpower-module">
+                <div class="module__header">
+                    <h2>Manpower Details</h2>
+                    <div class="module__actions">
+                        <button class="btn btn--primary" onclick="openEmployeeForm()">Add Employee</button>
+                        <button class="btn btn--secondary" onclick="openBulkImportModal()">Bulk Import</button>
+                        <button class="btn btn--outline" onclick="downloadTemplate()">Download Template</button>
+                    </div>
+                </div>
+                
+                <div class="data-table">
+                    <table class="table" id="employeeTable">
+                        <thead>
+                            <tr>
+                                <th>Employee ID</th>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Location</th>
+                                <th>Work Order Assignment</th>
+                                <th>Contact</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employeeTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Onboarding Module -->
+            <div class="module hidden" id="onboarding-module">
+                <div class="module__header">
+                    <h2>Employee Onboarding</h2>
+                    <div class="module__actions">
+                        <button class="btn btn--primary" onclick="openDocumentGenerationModal()">Generate Documents</button>
+                    </div>
+                </div>
+                
+                <div class="onboarding-grid">
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>Professional Document Generation</h3>
+                            <div class="document-types">
+                                <button class="btn btn--outline" onclick="generateDocumentType('offer-letter')">Offer Letter</button>
+                                <button class="btn btn--outline" onclick="generateDocumentType('appointment-letter')">Appointment Letter</button>
+                                <button class="btn btn--outline" onclick="generateDocumentType('increment-letter')">Increment Letter</button>
+                                <button class="btn btn--outline" onclick="generateDocumentType('payslip')">Pay Slip</button>
+                                <button class="btn btn--outline" onclick="generateDocumentType('form16')">Form 16</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>Generated Documents</h3>
+                            <div id="generatedDocuments">
+                                <p>No documents generated yet.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HR Management Module -->
+            <div class="module hidden" id="hr-management-module">
+                <div class="module__header">
+                    <h2>HR Management</h2>
+                </div>
+                
+                <div class="hr-tabs">
+                    <button class="hr-tab hr-tab--active" data-hr-section="attendance">Monthly Attendance</button>
+                    <button class="hr-tab" data-hr-section="salary">Salary Processing</button>
+                    <button class="hr-tab" data-hr-section="leave">Leave Management</button>
+                </div>
+                
+                <div class="hr-section" id="attendance-section">
+                    <div class="section-header">
+                        <h3>Monthly Attendance Calculator</h3>
+                        <button class="btn btn--primary" onclick="openAttendanceCalculator()">Add Attendance</button>
+                    </div>
+                    <div class="attendance-grid">
+                        <div class="card">
+                            <div class="card__body">
+                                <h4>Current Month Summary</h4>
+                                <div id="attendanceSummary">
+                                    <div class="attendance-stats">
+                                        <div class="stat-item">
+                                            <span class="stat-label">Total Employees:</span>
+                                            <span class="stat-value" id="totalEmployeesCount">2</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Attendance Records:</span>
+                                            <span class="stat-value" id="attendanceRecords">0</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Working Days:</span>
+                                            <span class="stat-value" id="workingDaysCount">22</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="data-table">
+                        <table class="table" id="attendanceTable">
+                            <thead>
+                                <tr>
+                                    <th>Employee</th>
+                                    <th>Month</th>
+                                    <th>Days Worked</th>
+                                    <th>Days Absent</th>
+                                    <th>Holidays</th>
+                                    <th>Total Days</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendanceTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="hr-section hidden" id="salary-section">
+                    <div class="section-header">
+                        <h3>Salary Processing</h3>
+                        <button class="btn btn--primary" onclick="processMonthlySalary()">Process Monthly Salary</button>
+                    </div>
+                    <div class="salary-processing">
+                        <div class="card">
+                            <div class="card__body">
+                                <h4>Salary Processing Status</h4>
+                                <div id="salaryProcessingStatus">
+                                    <p><strong>Current Month:</strong> September 2024</p>
+                                    <p><strong>Status:</strong> <span class="status-badge status-badge--pending">Ready for Processing</span></p>
+                                    <p><strong>Employees:</strong> 2 active employees</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="data-table">
+                        <table class="table" id="salaryTable">
+                            <thead>
+                                <tr>
+                                    <th>Employee</th>
+                                    <th>Month</th>
+                                    <th>Basic Salary</th>
+                                    <th>Days Worked</th>
+                                    <th>Gross Salary</th>
+                                    <th>Deductions</th>
+                                    <th>Net Salary</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="salaryTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="hr-section hidden" id="leave-section">
+                    <div class="section-header">
+                        <h3>Leave Management</h3>
+                        <button class="btn btn--primary" onclick="openLeaveForm()">Apply Leave</button>
+                    </div>
+                    <div class="data-table">
+                        <table class="table" id="leaveTable">
+                            <thead>
+                                <tr>
+                                    <th>Leave ID</th>
+                                    <th>Employee</th>
+                                    <th>Leave Type</th>
+                                    <th>From Date</th>
+                                    <th>To Date</th>
+                                    <th>Days</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaveTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grievances Module -->
+            <div class="module hidden" id="grievances-module">
+                <div class="module__header">
+                    <h2>Employee Grievances</h2>
+                    <div class="module__actions">
+                        <button class="btn btn--primary" onclick="openGrievanceForm()">Submit Grievance</button>
+                    </div>
+                </div>
+                
+                <div class="data-table">
+                    <table class="table" id="grievanceTable">
+                        <thead>
+                            <tr>
+                                <th>Grievance ID</th>
+                                <th>Employee</th>
+                                <th>Subject</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Submitted Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="grievanceTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Refer Program Module -->
+            <div class="module hidden" id="refer-program-module">
+                <div class="module__header">
+                    <h2>Refer Program</h2>
+                    <div class="module__actions">
+                        <button class="btn btn--primary" onclick="openEmailCampaign()">New Campaign</button>
+                        <button class="btn btn--secondary" onclick="manageTemplates()">Manage Templates</button>
+                    </div>
+                </div>
+                
+                <div class="refer-grid">
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>Email Campaigns</h3>
+                            <div id="emailCampaigns">
+                                <p>No campaigns created yet.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>Quick Actions</h3>
+                            <div class="quick-actions">
+                                <button class="btn btn--outline" onclick="sendBulkEmail()">Send Bulk Email</button>
+                                <button class="btn btn--outline" onclick="trackDelivery()">Track Delivery</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RBAC Module -->
+            <div class="module hidden" id="rbac-module">
+                <div class="module__header">
+                    <h2>Role-Based Access Control</h2>
+                    <div class="module__actions">
+                        <button class="btn btn--primary" onclick="openRoleForm()">Create Role</button>
+                        <button class="btn btn--secondary" onclick="openUserRoleForm()">Assign User Roles</button>
+                    </div>
+                </div>
+                
+                <div class="rbac-tabs">
+                    <button class="rbac-tab rbac-tab--active" data-rbac-section="roles">Define Roles</button>
+                    <button class="rbac-tab" data-rbac-section="permissions">Assign Permissions</button>
+                    <button class="rbac-tab" data-rbac-section="users">Assign Users</button>
+                    <button class="rbac-tab" data-rbac-section="access">Manage Access</button>
+                </div>
+                
+                <div class="rbac-section" id="roles-section">
+                    <div class="section-header">
+                        <h3>System Roles</h3>
+                    </div>
+                    <div class="data-table">
+                        <table class="table" id="rolesTable">
+                            <thead>
+                                <tr>
+                                    <th>Role Name</th>
+                                    <th>Description</th>
+                                    <th>Users Count</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rolesTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="rbac-section hidden" id="permissions-section">
+                    <div class="section-header">
+                        <h3>Permission Matrix</h3>
+                    </div>
+                    <div class="permission-matrix" id="permissionMatrix">
+                    </div>
+                </div>
+                
+                <div class="rbac-section hidden" id="users-section">
+                    <div class="section-header">
+                        <h3>User Role Assignments</h3>
+                    </div>
+                    <div class="data-table">
+                        <table class="table" id="userRolesTable">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Current Role</th>
+                                    <th>Status</th>
+                                    <th>Last Login</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userRolesTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="rbac-section hidden" id="access-section">
+                    <div class="section-header">
+                        <h3>Access Logs</h3>
+                    </div>
+                    <div class="access-logs" id="accessLogs">
+                        <p>Access logging feature will track user activity and permission usage.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for Forms -->
+    <div class="modal hidden" id="formModal">
+        <div class="modal__overlay" onclick="closeModal()"></div>
+        <div class="modal__content">
+            <div class="modal__header">
+                <h3 id="modalTitle">Form</h3>
+                <button class="modal__close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal__body" id="modalBody">
+                <!-- Dynamic form content -->
+            </div>
+            <div class="modal__footer">
+                <button class="btn btn--secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn--primary" id="modalSubmitBtn" onclick="submitForm()">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Viewing Details -->
+    <div class="modal hidden" id="viewModal">
+        <div class="modal__overlay" onclick="closeViewModal()"></div>
+        <div class="modal__content modal__content--large">
+            <div class="modal__header">
+                <h3 id="viewModalTitle">Details</h3>
+                <button class="modal__close" onclick="closeViewModal()">&times;</button>
+            </div>
+            <div class="modal__body" id="viewModalBody">
+                <!-- Dynamic view content -->
+            </div>
+            <div class="modal__footer">
+                <button class="btn btn--secondary" onclick="closeViewModal()">Close</button>
+                <button class="btn btn--primary" id="viewModalActionBtn" onclick="performViewAction()">Action</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
